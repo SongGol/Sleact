@@ -74,7 +74,7 @@ const Workspace = () => {
         }).catch((err) => {
             console.dir(err);
         })
-    }, []);
+    }, [newWorkspace, newUrl]);
 
     const onCloseModal = useCallback(() => {
         setShowCreateWorkspaceModal(false);
@@ -164,7 +164,9 @@ const Workspace = () => {
                     <Button type="submit">생성하기</Button>
                 </form>
             </Modal>
-            <CreateChannelModal show={showCreateChannelModal} onCloseModal={onCloseModal}
+            <CreateChannelModal
+                show={showCreateChannelModal}
+                onCloseModal={onCloseModal}
                 setShowCreateChannelModal={setShowCreateChannelModal} />
             <InviteWorkspaceModal
                 show={showInviteWorkspaceModal}
