@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Header } from '@pages/DirectMessage/styles';
 import fetcher from '@utils/fetcher';
+import ChatBox from '@components/ChatBox';
 import useSWR from 'swr';
 import gravatar from 'gravatar';
 import { useParams } from 'react-router-dom';
@@ -20,8 +21,8 @@ const DirectMessage = () => {
                 <img src={gravatar.url(userData.email, {s: "24px", d: 'retro'})} alt={userData.nickname}/>
                 <span>{userData.nickname}</span>
             </Header>
-            {/* <ChatList />
-            <ChatBox /> */}
+            {/* <ChatList /> */}
+            <ChatBox chat=""/>
         </Container>
     )
 };
