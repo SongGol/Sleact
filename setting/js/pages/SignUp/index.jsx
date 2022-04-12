@@ -3,7 +3,7 @@ import { Button, Error, Form, Header, Input, Label, LinkContainer, Success } fro
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { useCallback, useState, useRef } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
 const SignUp = () => {
@@ -57,7 +57,7 @@ const SignUp = () => {
   );
 
   if (userData) {
-    return <Navigate to="/workspace/sleact/channel/일반" replace={true} />;
+    return <Redirect to="/workspace/sleact" />;
   }
 
   return (

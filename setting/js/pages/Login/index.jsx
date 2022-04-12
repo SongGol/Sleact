@@ -3,7 +3,7 @@ import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { useCallback, useState, useRef } from 'react';
-import { useNavigate, Redirect, Navigate } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
@@ -11,7 +11,7 @@ const LogIn = () => {
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
-  let navigate = useNavigate();
+
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
@@ -37,7 +37,7 @@ const LogIn = () => {
   console.log(error, userData);
   if (!error && userData) {
     console.log('로그인됨', userData);
-    return <Navigate to='/workspace/sleact/channel/일반' replace={true} />;
+    return <Redirect to="/workspace/sleact/channel/일반" />;
   }
 
   return (

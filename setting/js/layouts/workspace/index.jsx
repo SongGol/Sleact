@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import axios from 'axios';
-import { Link, Route, Routes, Navigate, useParams } from 'react-router-dom';
+import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import { AddButton, Channels, Chats, Header, LogOutButton, MenuScroll, ProfileImg, ProfileModal, RightMenu, WorkspaceButton, WorkspaceModal, WorkspaceName, Workspaces, WorkspaceWrapper } from './styles';
 import Menu from '@components/Menu';
 import Modal from '@components/Modal';
@@ -10,6 +10,7 @@ import gravartar from 'gravatar';
 import fetcher from '@utils/fetcher';
 import { Button, Input, Label } from '@pages/SignUp/styles';
 import { toast, ToastContainer } from 'react-toastify';
+import { useParams } from 'react-router';
 import useInput from '@hooks/useInput';
 import useSWR from 'swr';
 import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
@@ -92,11 +93,11 @@ const Workspace = () => {
     }, []);
 
     if (loginError) {
-        return <Navigate to="/login" replace={true} />;
+        return <Redirect to="/login" />;
     }
 
     return (
-        <>
+        <div>
             <Header>
                 <RightMenu>
                     <span onClick={onClickUserProfile}>
@@ -145,10 +146,10 @@ const Workspace = () => {
                     </MenuScroll>
                 </Channels>
                 <Chats>
-                    <Routes>
-                        {/* <Route path="/workspace/:workspace/channel/:channel" element={Channel} /> */}
-                        <Route path="/workspace/:workspace/dm/:id" element={DirectMessage} />
-                    </Routes>
+                    <Switch>
+                        {/* <Route path="/workspace/:workspace/channel/:channel" component={Channel} /> */}
+                        <Route path="/workspace/:workspace/dm/:id" component={DirectMessage} />
+                    </Switch>
                 </Chats>
             </WorkspaceWrapper>
             <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
@@ -176,7 +177,7 @@ const Workspace = () => {
                 show={showInviteChannelModal}
                 onCloseModal={onCloseModal}
                 setShowInviteChannelModal={setShowInviteChannelModal} />
-        </>
+        </div>
     );
 };
 
