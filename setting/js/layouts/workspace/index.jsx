@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import axios from 'axios';
-import { Link, Route, Router, useNavigate } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import { AddButton, Channels, Chats, Header, LogOutButton, MenuScroll, ProfileImg, ProfileModal, RightMenu, WorkspaceButton, WorkspaceModal, WorkspaceName, Workspaces, WorkspaceWrapper } from './styles';
 import Menu from '@components/Menu'
 import Modal from '@components/Modal'
@@ -131,14 +131,12 @@ const Workspace = () => {
                 </Channels>
                 <Chats>
                     chat
-                    {/* <Router>
-                        <Routes>
-                            <Route path="/workspace/channel" element={Auth(Channel, true)}>
-                            </Route>
-                            <Route path="/workspace/dm" element={Auth(DirectMessasge, true)}>
-                            </Route>
-                        </Routes>
-                    </Router> */}
+                    <Routes>
+                        {/* <Route path="/workspace/:workspace/channel/:channel" element={Channel}>
+                        </Route>
+                        <Route path="/workspace/:workspace/dm/:id" element={DirectMessage}>
+                        </Route> */}
+                    </Routes>
                 </Chats>
             </WorkspaceWrapper>
             <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
