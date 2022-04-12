@@ -11,7 +11,9 @@ import { Button, Input, Label } from '@pages/SignUp/styles';
 import { toast, ToastContainer } from 'react-toastify';
 import useInput from '@hooks/useInput';
 import useSWR from 'swr';
-import InviteWorkspaceModal from '../../components/InviteWorkspaceModal';
+import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
+import InviteChannelModal from '@components/InviteChannelModal';
+
 
 const Workspace = () => {
     const { workspace, channel } = useParams();
@@ -168,10 +170,10 @@ const Workspace = () => {
                 show={showInviteWorkspaceModal}
                 onCloseModal={onCloseModal}
                 setShowInviteWorkspaceModal={setShowInviteWorkspaceModal} />
-            {/* <InviteChannelModal
+            <InviteChannelModal
                 show={showInviteChannelModal}
                 onCloseModal={onCloseModal}
-                setShowInviteWorkspaceModal={setShowInviteChannelModal} /> */}
+                setShowInviteChannelModal={setShowInviteChannelModal} />
         </>
     );
 };
