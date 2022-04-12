@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import axios from 'axios';
-import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, Route, Routes, Navigate, useParams } from 'react-router-dom';
 import { AddButton, Channels, Chats, Header, LogOutButton, MenuScroll, ProfileImg, ProfileModal, RightMenu, WorkspaceButton, WorkspaceModal, WorkspaceName, Workspaces, WorkspaceWrapper } from './styles';
 import Menu from '@components/Menu'
 import Modal from '@components/Modal'
@@ -13,14 +13,16 @@ import useInput from '@hooks/useInput';
 import useSWR from 'swr';
 
 const Workspace = () => {
+    const { workspace, channel } = useParams();
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
     const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
     const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
     const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
     const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
+
     const { data: userData, error: loginError, mutate: revalidateUser } = useSWR('/api/users', fetcher);
-    let navigate = useNavigate();
+    const { data: channelData } = useSWR(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
 
     const onLogoutHandler = useCallback(() => {
         axios
@@ -76,8 +78,7 @@ const Workspace = () => {
     }, []);
 
     if (loginError) {
-        navigate('/login');
-        return <>rr</>;
+        return <Navigate to="/workspace/sleact/channel/일반" replace={true} />;
     }
 
     return (
@@ -125,6 +126,7 @@ const Workspace = () => {
                                 <button onClick={onLogoutHandler}>로그아웃</button>
                             </WorkspaceModal>
                         </Menu>
+                        {channelData?.map((v) => (<div>{v.name}</div>))}
                         {/* <ChannelList userData={userData}/>
                         <DMList userData={userData}/> */}
                     </MenuScroll>
