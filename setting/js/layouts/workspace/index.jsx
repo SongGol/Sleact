@@ -56,7 +56,7 @@ const Workspace = () => {
     }, []);
 
     const onClickInviteWorkspace = useCallback(() => {
-
+        setShowInviteWorkspaceModal(true);
     }, []);
 
     const onCreateWorkspace = useCallback((e) => {
