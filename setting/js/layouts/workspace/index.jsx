@@ -83,8 +83,10 @@ const Workspace = () => {
     }, []);
 
     const onCloseModal = useCallback(() => {
-
-    }, []);
+        setShowCreateWorkspaceModal(false);
+        //setShowCreateChannelModal(false);
+        //setShowInviteWorkspaceModal(false);
+      }, []);
 
     console.log(`userData: ${userData}`)
 
