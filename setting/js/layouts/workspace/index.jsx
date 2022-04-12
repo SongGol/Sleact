@@ -13,6 +13,7 @@ import useInput from '@hooks/useInput';
 import useSWR from 'swr';
 import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
+import DMList from '@components/DMList';
 
 
 const Workspace = () => {
@@ -28,6 +29,7 @@ const Workspace = () => {
 
     const { data: userData, error: loginError, mutate: revalidateUser } = useSWR('/api/users', fetcher);
     const { data: channelData } = useSWR(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
+    const { data: memberData } = useSWR(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
 
     const onLogoutHandler = useCallback(() => {
         axios
@@ -53,7 +55,7 @@ const Workspace = () => {
 
     const toggleWorkspaceModal = useCallback(() => {
         setShowWorkspaceModal((prev) => !prev);
-    }, []);
+    }, []); 
 
     const onClickInviteWorkspace = useCallback(() => {
         setShowInviteWorkspaceModal(true);
@@ -137,8 +139,8 @@ const Workspace = () => {
                             </WorkspaceModal>
                         </Menu>
                         {channelData?.map((v) => (<div>{v.name}</div>))}
-                        {/* <ChannelList userData={userData}/>
-                        <DMList userData={userData}/> */}
+                        {/* <ChannelList userData={userData}/> */}
+                        <DMList userData={userData}/>
                     </MenuScroll>
                 </Channels>
                 <Chats>
