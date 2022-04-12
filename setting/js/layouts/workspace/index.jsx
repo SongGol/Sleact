@@ -2,11 +2,12 @@ import React, { useState, useCallback } from 'react';
 import axios from 'axios';
 import { Link, Route, Routes, Navigate, useParams } from 'react-router-dom';
 import { AddButton, Channels, Chats, Header, LogOutButton, MenuScroll, ProfileImg, ProfileModal, RightMenu, WorkspaceButton, WorkspaceModal, WorkspaceName, Workspaces, WorkspaceWrapper } from './styles';
-import Menu from '@components/Menu'
-import Modal from '@components/Modal'
-import CreateChannelModal from '@components/CreateChannelModal'
+import Menu from '@components/Menu';
+import Modal from '@components/Modal';
+import DirectMessage from '@pages/DirectMessage';
+import CreateChannelModal from '@components/CreateChannelModal';
 import gravartar from 'gravatar';
-import fetcher from '@utils/fetcher'
+import fetcher from '@utils/fetcher';
 import { Button, Input, Label } from '@pages/SignUp/styles';
 import { toast, ToastContainer } from 'react-toastify';
 import useInput from '@hooks/useInput';
@@ -144,12 +145,9 @@ const Workspace = () => {
                     </MenuScroll>
                 </Channels>
                 <Chats>
-                    chat
                     <Routes>
-                        {/* <Route path="/workspace/:workspace/channel/:channel" element={Channel}>
-                        </Route>
-                        <Route path="/workspace/:workspace/dm/:id" element={DirectMessage}>
-                        </Route> */}
+                        {/* <Route path="/workspace/:workspace/channel/:channel" element={Channel} /> */}
+                        <Route path="/workspace/:workspace/dm/:id" element={DirectMessage} />
                     </Routes>
                 </Chats>
             </WorkspaceWrapper>
