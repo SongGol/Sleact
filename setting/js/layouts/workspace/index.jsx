@@ -92,7 +92,7 @@ const Workspace = () => {
     }, []);
 
     if (loginError) {
-        return <Navigate to="/workspace/sleact/channel/일반" replace={true} />;
+        return <Navigate to="/login" replace={true} />;
     }
 
     return (

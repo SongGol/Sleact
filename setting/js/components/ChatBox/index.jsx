@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { ChatArea, Form, MentionsTextarea, Toolbox, SendButton } from '@components/ChatBox/styles';
 
-const ChatBox = () => {
+const ChatBox = ({chat}) => {
     const onSubmitForm = useCallback(() => {
 
     }, []);
