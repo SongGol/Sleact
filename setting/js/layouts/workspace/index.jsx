@@ -154,7 +154,7 @@ const Workspace = () => {
                     <Button type="submit">생성하기</Button>
                 </form>
             </Modal>
-            <CreateChannelModal sohw={showCreateChannelModal} onClose={onCloseModal}
+            <CreateChannelModal show={showCreateChannelModal} onCloseModal={onCloseModal}
                 setShowCreateChannelModal={setShowCreateChannelModal} />
         </>
     );
