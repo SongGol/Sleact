@@ -3,7 +3,8 @@ import axios from 'axios';
 import { Link, Route, Router, useNavigate } from 'react-router-dom';
 import { AddButton, Channels, Chats, Header, LogOutButton, MenuScroll, ProfileImg, ProfileModal, RightMenu, WorkspaceButton, WorkspaceModal, WorkspaceName, Workspaces, WorkspaceWrapper } from './styles';
 import Menu from '@components/Menu'
-import Modal from '@components/modal'
+import Modal from '@components/Modal'
+import CreateChannelModal from '@components/CreateChannelModal'
 import gravartar from 'gravatar';
 import fetcher from '@utils/fetcher'
 import { Button, Input, Label } from '@pages/SignUp/styles';
@@ -14,34 +15,12 @@ import useSWR from 'swr';
 const Workspace = () => {
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
+    const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
+    const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
     const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
     const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
     const { data: userData, error: loginError, mutate: revalidateUser } = useSWR('/api/users', fetcher);
     let navigate = useNavigate();
-
-    // const dispatch = useDispatch();
-
-    // let userData;
-
-    // dispatch(getWorkspace())
-    //     .then(response => {
-    //         if (response.payload.success) {
-    //             console.log(response.payload.workspace);
-    //             userData = response.payload.workspace;
-    //         } else {
-    //             alert('Failed to sign up');
-    //         }
-    //     });
-
-    // axios.get('/api/users/workspace')
-    //         .then(response => {
-    //         if (response.data.success === true) {
-    //             console.log(response.data.workspace);
-    //             userData = cloneDeep(response.data.workspace);
-    //         } else {
-    //             alert('Failed to sign up');
-    //         }
-    //     });
 
     const onLogoutHandler = useCallback(() => {
         axios
@@ -65,6 +44,10 @@ const Workspace = () => {
         setShowCreateWorkspaceModal(true);
     });
 
+    const toggleWorkspaceModal = useCallback(() => {
+        setShowWorkspaceModal((prev) => !prev);
+    }, []);
+
     const onCreateWorkspace = useCallback((e) => {
         e.preventDefault();
         if (!newWorkspace || !newWorkspace.trim()) return;
@@ -84,12 +67,13 @@ const Workspace = () => {
 
     const onCloseModal = useCallback(() => {
         setShowCreateWorkspaceModal(false);
-        //setShowCreateChannelModal(false);
+        setShowCreateChannelModal(false);
         //setShowInviteWorkspaceModal(false);
       }, []);
 
-    console.log(`userData: ${userData}`)
-
+    const onClickAddChannel = useCallback(() => {
+        setShowCreateChannelModal(true);
+    }, []);
 
     if (loginError) {
         navigate('/login');
@@ -126,19 +110,22 @@ const Workspace = () => {
                             </Link>
                         );
                     })}
-                    <AddButton onClick={onClickCreateWorkspace}></AddButton>
+                    <AddButton onClick={onClickCreateWorkspace}>+</AddButton>
                 </Workspaces>
                 <Channels>
-                    <WorkspaceName>
+                    <WorkspaceName onClick={toggleWorkspaceModal}>
                         Sleact
                     </WorkspaceName>
                     <MenuScroll>
-                        {/* <Menu show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal} style={{top:95, left:80}}>
+                        <Menu show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal} style={{top:95, left:80}}>
                             <WorkspaceModal>
-                                
+                                <h2>sleact</h2>
+                                {/* <button onClick={onClickInviteWorkspace}>워크스페이스에 사용자 초대</button> */}
+                                <button onClick={onClickAddChannel}>채널 만들기</button>
+                                <button onClick={onLogoutHandler}>로그아웃</button>
                             </WorkspaceModal>
                         </Menu>
-                        <ChannelList userData={userData}/>
+                        {/* <ChannelList userData={userData}/>
                         <DMList userData={userData}/> */}
                     </MenuScroll>
                 </Channels>
@@ -167,6 +154,8 @@ const Workspace = () => {
                     <Button type="submit">생성하기</Button>
                 </form>
             </Modal>
+            <CreateChannelModal sohw={showCreateChannelModal} onClose={onCloseModal}
+                setShowCreateChannelModal={setShowCreateChannelModal} />
         </>
     );
 };
