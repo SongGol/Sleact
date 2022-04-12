@@ -14,6 +14,7 @@ import useSWR from 'swr';
 import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
 import DMList from '@components/DMList';
+import ChannelList from '@components/ChannelList';
 
 
 const Workspace = () => {
@@ -138,9 +139,8 @@ const Workspace = () => {
                                 <button onClick={onLogoutHandler}>로그아웃</button>
                             </WorkspaceModal>
                         </Menu>
-                        {channelData?.map((v) => (<div>{v.name}</div>))}
-                        {/* <ChannelList userData={userData}/> */}
-                        <DMList userData={userData}/>
+                        <ChannelList />
+                        <DMList />
                     </MenuScroll>
                 </Channels>
                 <Chats>
