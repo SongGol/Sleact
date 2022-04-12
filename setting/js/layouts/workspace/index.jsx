@@ -2,11 +2,12 @@ import React, { useState, useCallback } from 'react';
 import axios from 'axios';
 import { Link, Route, Router, useNavigate } from 'react-router-dom';
 import { AddButton, Channels, Chats, Header, LogOutButton, MenuScroll, ProfileImg, ProfileModal, RightMenu, WorkspaceButton, WorkspaceModal, WorkspaceName, Workspaces, WorkspaceWrapper } from './styles';
-//import Menu from '../../memu'
-//import Modal from '../../modal'
+import Menu from '@components/Menu'
+import Modal from '@components/modal'
 import gravartar from 'gravatar';
 import fetcher from '@utils/fetcher'
 import { Button, Input, Label } from '@pages/SignUp/styles';
+import { toast, ToastContainer } from 'react-toastify';
 import useInput from '@hooks/useInput';
 import useSWR from 'swr';
 
@@ -15,8 +16,9 @@ const Workspace = () => {
     const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
     const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
     const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
-    const { data: userData  } = useSWR('/api/users', fetcher);
+    const { data: userData, error: loginError, mutate: revalidateUser } = useSWR('/api/users', fetcher);
     let navigate = useNavigate();
+
     // const dispatch = useDispatch();
 
     // let userData;
@@ -41,17 +43,17 @@ const Workspace = () => {
     //         }
     //     });
 
-    const onLogoutHandler = () => {
-        axios.get('/api/users/logout')
-            .then(response => {
-                console.log(response.data)
-                if (response.data.success) {
-                    navigate('/login');
-                } else {
-                    alert('로그아웃을 실패 했습니다.');
-                }
-            })
-    }
+    const onLogoutHandler = useCallback(() => {
+        axios
+          .post('/api/users/logout')
+          .then(() => {
+            revalidateUser();
+          })
+          .catch((error) => {
+            console.dir(error);
+            toast.error(error.response?.data, { position: 'bottom-center' });
+          });
+    }, []);
 
     //토글 함수
     const onClickUserProfile = useCallback((e) => {
@@ -71,6 +73,7 @@ const Workspace = () => {
             workspace: newWorkspace,
             url: newUrl,
         }).then(() => {
+            revalidateUser();
             setShowCreateWorkspaceModal(false);
             setNewWorkspace('');
             setNewUrl('');
@@ -83,44 +86,44 @@ const Workspace = () => {
 
     }, []);
 
-    console.log(userData)
+    console.log(`userData: ${userData}`)
 
-    // if (userData === undefined) {
-    //     navigate('/login');
-    //     return;
-    // }
+
+    if (loginError) {
+        navigate('/login');
+        return <>rr</>;
+    }
 
     return (
         <>
             <Header>
                 <RightMenu>
                     <span onClick={onClickUserProfile}>
-                        <ProfileImg src={gravartar.url("test", { s: "28px", d: "retro"})} alt={"nickname"} />
-                        {/* {showUserMenu &&
-                            <Menu style={{right: 0, top:38}} show={showUserMenu} onCloseModal={onClickUserProfile}>
-                                <ProfileModal>
-                                    <img scr={gravartar.url("test", {s:"36px", d:"radio"})} alt={"nickname"} />
-                                    <div>
-                                        <span id="profile-name">nickname</span>
-                                        <span id="profile-active">active</span>
-                                    </div>
-                                </ProfileModal>
-                                <LogOutButton onClick={onLogoutHandler}>로그아웃</LogOutButton>
-                            </Menu>} */}
+                        <ProfileImg src={gravartar.url(userData.email, { s: "28px", d: "retro"})} alt={userData.nickname} />
                     </span>
+                    {showUserMenu &&
+                        <Menu style={{right: 0, top:38}} show={showUserMenu} onCloseModal={onClickUserProfile}>
+                            <ProfileModal>
+                                <img scr={gravartar.url(userData.email, {s:"36px", d:"radio"})} alt={userData.nickname} />
+                                <div>
+                                    <span id="profile-name">{userData.nickname}</span>
+                                    <span id="profile-active">Active</span>
+                                </div>
+                            </ProfileModal>
+                            <LogOutButton onClick={onLogoutHandler}>로그아웃</LogOutButton>
+                        </Menu>}
                 </RightMenu>
             </Header>
             <WorkspaceWrapper>
                 <Workspaces>
-                    {/* {console.log("userData" + userData)}
-                    {userData?.workspace.map((ws) => {
+                    {userData?.Workspaces.map((ws) => {
                         console.log("map" + ws)
                         return (
-                            <Link key={ws.id} to={`/workspace/${123}/channel/일반`}>
+                            <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
                                 <WorkspaceButton>{ws.name.slice(0,1).toUpperCase()}</WorkspaceButton>
                             </Link>
                         );
-                    })} */}
+                    })}
                     <AddButton onClick={onClickCreateWorkspace}></AddButton>
                 </Workspaces>
                 <Channels>
@@ -149,7 +152,7 @@ const Workspace = () => {
                     </Router> */}
                 </Chats>
             </WorkspaceWrapper>
-            {/* <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
+            <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
                 <form onSubmit={onCreateWorkspace}>
                     <Label id='workspace-label'>
                         <span>워크스페이스 이름</span>
@@ -161,7 +164,7 @@ const Workspace = () => {
                     </Label>
                     <Button type="submit">생성하기</Button>
                 </form>
-            </Modal> */}
+            </Modal>
         </>
     );
 };

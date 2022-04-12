@@ -3,7 +3,7 @@ import { Button, Error, Form, Header, Input, Label, LinkContainer, Success } fro
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { useCallback, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 const SignUp = () => {
@@ -15,7 +15,6 @@ const SignUp = () => {
   const [nickname, onChangeNickname] = useInput('');
   const [password, , setPassword] = useInput('');
   const [passwordCheck, , setPasswordCheck] = useInput('');
-  let navigate = useNavigate();
 
   const onChangePassword = useCallback(
     (e) => {
@@ -58,9 +57,7 @@ const SignUp = () => {
   );
 
   if (userData) {
-    //navigate('/');
-    //return;
-    //return <Redirect to="/workspace/sleact" />;
+    return <Navigate to="/workspace/sleact" replace={true} />;
   }
 
   return (

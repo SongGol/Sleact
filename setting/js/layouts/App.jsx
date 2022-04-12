@@ -20,7 +20,7 @@ const App = () => {
             <Route exact path="/" element={<LogIn />}></Route>
             <Route exact path="/login" element={<LogIn />}></Route>
             <Route exact path="/signup" element={<SignUp />}></Route>
-            <Route exact path="/workspace" element={<Workspace />}></Route>
+            <Route exact path="/workspace/*" element={<Workspace />}></Route>
           </Routes>
         </Fragment>
       </Router>
