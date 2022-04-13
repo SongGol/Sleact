@@ -1,16 +1,22 @@
 import React, { useCallback } from 'react';
 import { ChatArea, Form, MentionsTextarea, Toolbox, SendButton } from '@components/ChatBox/styles';
 
-const ChatBox = ({chat}) => {
-    const onSubmitForm = useCallback(() => {
-
+const ChatBox = ({ chat, onSubmitForm, onChangeChat }) => {
+    const onKeydownChat = useCallback((e) => {
+        (e) => {
+            console.log(e);
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                onSubmitForm(e);
+            }
+        }
     }, []);
 
     return (
         <ChatArea>
             <Form onSubmit={onSubmitForm}>
                 <MentionsTextarea>
-                    <textarea></textarea>
+                    <textarea value={chat} onChange={onChangeChat} onKeyDown={onKeydownChat}/>
                 </MentionsTextarea>
                 <Toolbox>
                     <SendButton
