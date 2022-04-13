@@ -1,4 +1,5 @@
 import ChatBox from "@components/ChatBox";
+import ChatList from '@components/ChatList';
 import { Container, Header } from '@pages/Channel/styles';
 import React, { useCallback } from 'react';
 import useInput from '@hooks/useInput'

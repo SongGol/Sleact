@@ -4,6 +4,7 @@ import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import { AddButton, Channels, Chats, Header, LogOutButton, MenuScroll, ProfileImg, ProfileModal, RightMenu, WorkspaceButton, WorkspaceModal, WorkspaceName, Workspaces, WorkspaceWrapper } from './styles';
 import Menu from '@components/Menu';
 import Modal from '@components/Modal';
+import Channel from '@pages/Channel';
 import DirectMessage from '@pages/DirectMessage';
 import CreateChannelModal from '@components/CreateChannelModal';
 import gravartar from 'gravatar';
@@ -147,7 +148,7 @@ const Workspace = () => {
                 </Channels>
                 <Chats>
                     <Switch>
-                        {/* <Route path="/workspace/:workspace/channel/:channel" component={Channel} /> */}
+                        <Route path="/workspace/:workspace/channel/:channel" component={Channel} />
                         <Route path="/workspace/:workspace/dm/:id" component={DirectMessage} />
                     </Switch>
                 </Chats>

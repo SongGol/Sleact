@@ -1,7 +1,15 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { ChatArea, Form, MentionsTextarea, Toolbox, SendButton } from '@components/ChatBox/styles';
+import autosize from 'autosize';
 
-const ChatBox = ({ chat, onSubmitForm, onChangeChat }) => {
+const ChatBox = ({ chat, onSubmitForm, onChangeChat, placeholder }) => {
+    const textareaRef = useRef();
+    useEffect(() => {
+        if (textareaRef.current) {
+            autosize(textareaRef.current);
+        }
+    }, []);
+
     const onKeydownChat = useCallback((e) => {
         (e) => {
             console.log(e);
@@ -15,9 +23,14 @@ const ChatBox = ({ chat, onSubmitForm, onChangeChat }) => {
     return (
         <ChatArea>
             <Form onSubmit={onSubmitForm}>
-                <MentionsTextarea>
-                    <textarea value={chat} onChange={onChangeChat} onKeyDown={onKeydownChat}/>
-                </MentionsTextarea>
+                <MentionsTextarea
+                    id="editor-chat"
+                    value={chat}
+                    onChange={onChangeChat}
+                    onKeyDown={onKeydownChat}
+                    placeholder={placeholder}
+                    ref={textareaRef}
+                />
                 <Toolbox>
                     <SendButton
                         className={
