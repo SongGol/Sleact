@@ -1,10 +1,13 @@
 import { ChatZone, Section } from '@components/ChatList/styles';
+import Chat from '@components/Chat';
 import React from 'react';
 
-const ChatList = () => {
+const ChatList = ({ chatData }) => {
     return (
         <ChatZone>
-            <Section>section</Section>
+            {chatData?.map((chat) => {
+                <Chat key={chat.id} data={chat} />
+            })}
         </ChatZone>
     );
 };
