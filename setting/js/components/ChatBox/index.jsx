@@ -8,17 +8,17 @@ const ChatBox = ({ chat, onSubmitForm, onChangeChat, placeholder }) => {
         if (textareaRef.current) {
             autosize(textareaRef.current);
         }
-    }, []);
+    }, [textareaRef.current]);
 
     const onKeydownChat = useCallback((e) => {
-        (e) => {
-            console.log(e);
-            if (e.key === 'Enter' && !e.shiftKey) {
+        console.log(e);
+        if (e.key === 'Enter') {
+            if (!e.shiftKey) {
                 e.preventDefault();
                 onSubmitForm(e);
-            }
+            } 
         }
-    }, []);
+    }, [chat]);
 
     return (
         <ChatArea>
@@ -27,7 +27,7 @@ const ChatBox = ({ chat, onSubmitForm, onChangeChat, placeholder }) => {
                     id="editor-chat"
                     value={chat}
                     onChange={onChangeChat}
-                    onKeyDown={onKeydownChat}
+                    onKeyPress={onKeydownChat}
                     placeholder={placeholder}
                     ref={textareaRef}
                 />
