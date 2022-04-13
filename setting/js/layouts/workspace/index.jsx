@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import { AddButton, Channels, Chats, Header, LogOutButton, MenuScroll, ProfileImg, ProfileModal, RightMenu, WorkspaceButton, WorkspaceModal, WorkspaceName, Workspaces, WorkspaceWrapper } from './styles';
@@ -18,6 +18,7 @@ import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
 import DMList from '@components/DMList';
 import ChannelList from '@components/ChannelList';
+import useSocket from '@hooks/useSocket';
 
 
 const Workspace = () => {
@@ -34,6 +35,19 @@ const Workspace = () => {
     const { data: userData, error: loginError, mutate: revalidateUser } = useSWR('/api/users', fetcher);
     const { data: channelData } = useSWR(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
     const { data: memberData } = useSWR(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
+    const [socket, disconnect] = useSocket(workspace);
+
+    useEffect(() => {
+        if (channelData && userData && socket) {
+            socket?.emit('login', { id: userData.id, channels: channelData.map((v) => v.id)});
+        }
+    }, [socket, channelData, userData]);
+
+    useEffect(() => {
+        return () => {
+            disconnect();
+        }
+    }, [workspace, disconnect]);
 
     const onLogoutHandler = useCallback(() => {
         axios
