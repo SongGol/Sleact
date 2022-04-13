@@ -21,7 +21,7 @@ const ChatBox = ({ onSubmitForm, chat, onChangeChat, placeholder, data }) => {
         }
       }
     },
-    [chat],
+    [onSubmitForm],
   );
 
   const renderUserSuggestion = useCallback(

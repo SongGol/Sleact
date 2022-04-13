@@ -45,7 +45,7 @@ const Workspace = () => {
             console.dir(error);
             toast.error(error.response?.data, { position: 'bottom-center' });
           });
-    }, []);
+    }, [revalidateUser]);
 
     //토글 함수
     const onClickUserProfile = useCallback((e) => {
