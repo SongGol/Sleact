@@ -12,8 +12,8 @@ const InviteChannelModal = ({ show, onCloseModal, setShowInviteChannelModal }) =
   const { workspace, channel } = useParams();
   const [newMember, onChangeNewMember, setNewMember] = useInput('');
   const { data: userData } = useSWR('/api/users', fetcher);
-  const { mutate: revalidateMembers } = useSWR(
-    userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
+  const { revalidate: revalidateMembers } = useSWR(
+    userData ? `/api/workspaces/${workspace}/channel/${channel}/members` : null,
     fetcher,
   );
 
