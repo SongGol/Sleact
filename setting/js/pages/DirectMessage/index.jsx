@@ -4,6 +4,7 @@ import fetcher from '@utils/fetcher';
 import ChatList from '@components/ChatList';
 import ChatBox from '@components/ChatBox';
 import useInput from '@hooks/useInput';
+import makeSection from '@utils/makeSection';
 import useSWR from 'swr';
 import gravatar from 'gravatar';
 import { useParams } from 'react-router-dom';
@@ -40,13 +41,15 @@ const DirectMessage = () => {
         return null;
     }
 
+    const chatSections = makeSection(chatData ? [...chatData]?.reverse() : []);
+
     return (
         <Container>
             <Header>
                 <img src={gravatar.url(userData.email, {s: "24px", d: 'retro'})} alt={userData.nickname}/>
                 <span>{userData.nickname}</span>
             </Header>
-            <ChatList chatData={chatData}/>
+            <ChatList chatSections={chatSections}/>
             <ChatBox chat={chat} onChangeChat={onChangeChat} onSubmitForm={onSubmitForm}/>
         </Container>
     )
