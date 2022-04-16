@@ -1,8 +1,10 @@
 import React from 'react';
+import gravatar from 'gravatar';
 import { ChatWrapper } from '@components/Chat/styles';
 
-const Chat = ({ data }) => {
+const Chat = ({ key, data }) => {
     const user = data.Sender;
+    console.log(`chat component user: ${user}`)
 
     return (
         <ChatWrapper>

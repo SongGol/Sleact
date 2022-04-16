@@ -18,7 +18,7 @@ const ChatBox = ({ chat, onSubmitForm, onChangeChat, placeholder }) => {
                 onSubmitForm(e);
             } 
         }
-    }, [chat]);
+    }, [onSubmitForm]);
 
     return (
         <ChatArea>
@@ -29,7 +29,7 @@ const ChatBox = ({ chat, onSubmitForm, onChangeChat, placeholder }) => {
                     onChange={onChangeChat}
                     onKeyPress={onKeydownChat}
                     placeholder={placeholder}
-                    ref={textareaRef}
+                    inputRef={textareaRef}
                 />
                 <Toolbox>
                     <SendButton
