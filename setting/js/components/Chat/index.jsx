@@ -1,6 +1,7 @@
 import React from 'react';
 import gravatar from 'gravatar';
 import { ChatWrapper } from '@components/Chat/styles';
+import dayjs from 'dayjs';
 
 const Chat = ({ key, data }) => {
     const user = data.Sender;
@@ -14,7 +15,7 @@ const Chat = ({ key, data }) => {
             <div className="chat-text">
                 <div className="chat-user">
                     <b>{user.nickname}</b>
-                    <span>{data.createdAt}</span>
+                    <span>{dayjs(data.createdAt)}</span>
                 </div>
                 <p>{data.content}</p>
             </div>
