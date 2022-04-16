@@ -1,8 +1,17 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { ChatArea, Form, MentionsTextarea, Toolbox, SendButton } from '@components/ChatBox/styles';
+import { ChatArea, Form, MentionsTextarea, Toolbox, SendButton, EachMention } from '@components/ChatBox/styles';
+import { useParams } from 'react-router';
+import fetcher from '@utils/fetcher';
+import gravatar from 'gravatar';
+import useSWR from 'swr';
+import { Mention } from 'react-mentions';
 import autosize from 'autosize';
 
 const ChatBox = ({ chat, onSubmitForm, onChangeChat, placeholder }) => {
+    const { workspace } = useParams();
+    const { data: userData, error: loginError, mutate: revalidateUser } = useSWR('/api/users', fetcher);
+    const { data: memberData } = useSWR(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
+
     const textareaRef = useRef();
     useEffect(() => {
         if (textareaRef.current) {
@@ -20,6 +29,16 @@ const ChatBox = ({ chat, onSubmitForm, onChangeChat, placeholder }) => {
         }
     }, [onSubmitForm]);
 
+    const renderSuggestion = useCallback((suggestion, search, highlightedDisplay, index, focus) => {
+        if (!memberData) return;
+        return (
+            <EachMention focus={focus}>
+                <img src={gravatar.url(memberData[index].email, {s: '20px', d:'retro'})} alt={memberData[index].nickname}/>
+                <span>{highlightedDisplay}</span>
+            </EachMention>
+        )
+    }, [memberData]);
+
     return (
         <ChatArea>
             <Form onSubmit={onSubmitForm}>
@@ -30,7 +49,15 @@ const ChatBox = ({ chat, onSubmitForm, onChangeChat, placeholder }) => {
                     onKeyPress={onKeydownChat}
                     placeholder={placeholder}
                     inputRef={textareaRef}
-                />
+                    allowSuggestionsAboveCursor
+                >
+                    <Mention
+                        appendSpaceOnAdd
+                        trigger="@"
+                        data={memberData?.map((v) => ({id: v.id, display: v.nickname})) || []}
+                        renderSuggestion={renderSuggestion}
+                        />
+                </MentionsTextarea>
                 <Toolbox>
                     <SendButton
                         className={
