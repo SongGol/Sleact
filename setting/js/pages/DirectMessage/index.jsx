@@ -6,6 +6,7 @@ import ChatBox from '@components/ChatBox';
 import useInput from '@hooks/useInput';
 import makeSection from '@utils/makeSection';
 import useSWR, { mutate, useSWRInfinite } from 'swr';
+import useSocket from '@hooks/useSocket';
 import gravatar from 'gravatar';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -19,9 +20,10 @@ const DirectMessage = () => {
     console.log(`Direct Message component chat data: ${chatData}`)
     const isEmpty = chatData?.[0]?.length === 0;
     const isReachingEnd = isEmpty || (chatData && chatData[chatData.length - 1]?.length < 20) || false;
-    
     const [chat, onChangeChat, setChat] = useInput('');
     const scrollbarRef = useRef(null);
+
+    const [socket] = useSocket(workspace);
 
     const onSubmitForm = useCallback((e) => {
         e.preventDefault();
@@ -61,6 +63,31 @@ const DirectMessage = () => {
             scrollbarRef.current?.scrollToBottom();
         }
     }, []);
+
+    const onMessage = useCallback((data) => {
+        if (data.SenderId === Number(id) && myData.id !== Number(id)) {
+            mutateChat((chatData) => {
+                chatData?.[0].unshift(data);
+                return chatData;
+            }, false).then(() => {
+                if (scrollbarRef.current) {
+                    if (scrollbarRef.current.getScrollHeight()
+                        < scrollbarRef.current.getClientHeight() + scrollbarRef.current.getScrollTop() + 150) {
+                        setTimeout(() => {
+                            scrollbarRef.current?.scrollToBottom();
+                        }, 50);
+                    }
+                }
+            })
+        }
+    }, []);
+
+    useEffect(() => {
+        socket?.on('dm', onMessage);
+        return () => {
+            socket?.off('dm', onMessage);
+        }
+    }, [socket, onMessage])
 
     if (!userData || !myData) {
         return null;

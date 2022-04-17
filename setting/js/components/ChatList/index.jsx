@@ -3,14 +3,14 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Chat from '@components/Chat';
 import React, { useCallback, forwardRef } from 'react';
 
-const ChatList = forwardRef(({ chatSections, setSize, isEmpty, isReachingEnd }, ref) => {
+const ChatList =({ chatSections, setSize, isEmpty, isReachingEnd, scrollRef }) => {
     const onScroll = useCallback(() => {
         if (values.scrollTop === 0 && !isReachingEnd) {
             //가장 위에서 데이터 로딩
             setSize((prevSize) => prevSize + 1)
                 .then(() => {
                     //스크롤 위치 유지
-                    ref.current?.scrollTop(ref.current?.getScrollHeight() - values.scrollHeight);
+                    scrollRef.current?.scrollTop(scrollRef.current?.getScrollHeight() - values.scrollHeight);
                 })
         }
     }, []);
@@ -18,7 +18,7 @@ const ChatList = forwardRef(({ chatSections, setSize, isEmpty, isReachingEnd }, 
 
     return (
         <ChatZone>
-            <Scrollbars autoHide ref={ref} onScrollFrame={onScroll}>
+            <Scrollbars autoHide ref={scrollRef} onScrollFrame={onScroll}>
             {Object.entries(chatSections).map(([date, chats]) => {
                 return (
                     <Section className={`section-${date}`} key={date}>
@@ -34,6 +34,6 @@ const ChatList = forwardRef(({ chatSections, setSize, isEmpty, isReachingEnd }, 
             </Scrollbars>
         </ChatZone>
     );
-});
+};
 
 export default ChatList;
