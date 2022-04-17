@@ -10,6 +10,7 @@ const ChatList = forwardRef(({ chatSections, setSize, isEmpty, isReachingEnd }, 
             setSize((prevSize) => prevSize + 1)
                 .then(() => {
                     //스크롤 위치 유지
+                    ref.current?.scrollTop(ref.current?.getScrollHeight() - values.scrollHeight);
                 })
         }
     }, []);
