@@ -1,10 +1,10 @@
 import { ChatZone, Section, StickyHeader } from '@components/ChatList/styles';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Chat from '@components/Chat';
-import React, { useCallback, forwardRef } from 'react';
+import React, { useCallback } from 'react';
 
 const ChatList =({ chatSections, setSize, isEmpty, isReachingEnd, scrollRef }) => {
-    const onScroll = useCallback(() => {
+    const onScroll = useCallback((values) => {
         if (values.scrollTop === 0 && !isReachingEnd) {
             //가장 위에서 데이터 로딩
             setSize((prevSize) => prevSize + 1)
@@ -15,7 +15,6 @@ const ChatList =({ chatSections, setSize, isEmpty, isReachingEnd, scrollRef }) =
         }
     }, []);
 
-
     return (
         <ChatZone>
             <Scrollbars autoHide ref={scrollRef} onScrollFrame={onScroll}>
@@ -25,11 +24,11 @@ const ChatList =({ chatSections, setSize, isEmpty, isReachingEnd, scrollRef }) =
                         <StickyHeader>
                             <button>{date}</button>
                         </StickyHeader>
-                        {chats?.map((chat) => {
+                        {chats?.map((chat) => 
                             <Chat key={chat.id} data={chat} />
-                        })}
+                        )}
                     </Section>
-                )
+                );
             })}
             </Scrollbars>
         </ChatZone>

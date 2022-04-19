@@ -15,9 +15,8 @@ const DirectMessage = () => {
     const { workspace, id } = useParams();
     const { data: userData } = useSWR(`/api/workspaces/${workspace}/users/${id}`, fetcher);
     const { data: myData } = useSWR('/api/users', fetcher);
-    const { data: chatData, mutate: mutateChat, setSize } = useSWRInfinite(
+    const { data: chatData, mutate: mutateChat, revalidate, setSize } = useSWRInfinite(
         (index) => `/api/workspaces/${workspace}/dms/${id}/chats?perPage=20&page=${index + 1}`, fetcher);
-    console.log(`Direct Message component chat data: ${chatData}`)
     const isEmpty = chatData?.[0]?.length === 0;
     const isReachingEnd = isEmpty || (chatData && chatData[chatData.length - 1]?.length < 20) || false;
     const [chat, onChangeChat, setChat] = useInput('');
@@ -51,7 +50,7 @@ const DirectMessage = () => {
                     content: chat,
                 })
                 .then(() => {
-                    //mutateChat();
+                    revalidate();
                 })
                 .catch(console.error);
         }
@@ -62,7 +61,7 @@ const DirectMessage = () => {
         if (chatData?.length === 1) {
             scrollbarRef.current?.scrollToBottom();
         }
-    }, []);
+    }, [chatData]);
 
     const onMessage = useCallback((data) => {
         if (data.SenderId === Number(id) && myData.id !== Number(id)) {
@@ -104,7 +103,7 @@ const DirectMessage = () => {
             <ChatList chatSections={chatSections} scrollRef={scrollbarRef} setSize={setSize} isEmpty={isEmpty} isReachingEnd={isReachingEnd} />
             <ChatBox chat={chat} onChangeChat={onChangeChat} onSubmitForm={onSubmitForm}/>
         </Container>
-    )
+    );
 };
 
 export default DirectMessage;

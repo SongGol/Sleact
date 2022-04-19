@@ -5,15 +5,17 @@ import regexifyString from 'regexify-string';
 import dayjs from 'dayjs';
 import { Link, useParams } from 'react-router-dom';
 
-const Chat = ({ key, data }) => {
-    const user = data.Sender;
+const Chat = ({ data }) => {
+    const user = 'Sender' in data ? data.Sender : data.User;
     const { workspace } = useParams();
+
+    console.log(`in chat ${data}`)
 
     const result = useMemo(() => regexifyString({
         input: data.content,
-        pattern: /@\[(.+?)\]\((\d+?)\)|\n/g,
+        pattern: /@\[(.+?)]\((\d+?)\)|\n/g,
         decorator(match, index) {
-            const arr = match.match(/@\[(.+?)\]\((\d+?)\)/);
+            const arr = match.match(/@\[(.+?)]\((\d+?)\)/);
             if (arr) {
                 return (
                     <Link key={match + index} to={`/workspace/${workspace}/dm/${arr[2]}`} >
@@ -33,7 +35,7 @@ const Chat = ({ key, data }) => {
             <div className="chat-text">
                 <div className="chat-user">
                     <b>{user.nickname}</b>
-                    <span>{dayjs(data.createdAt)}</span>
+                    <span>{dayjs(data.createdAt).format('h:mm A')}</span>
                 </div>
                 <p>{result}</p>
             </div>
