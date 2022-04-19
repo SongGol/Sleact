@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Container, Header } from '@pages/DirectMessage/styles';
 import fetcher from '@utils/fetcher';
 import ChatList from '@components/ChatList';
@@ -21,6 +21,7 @@ const DirectMessage = () => {
     const isReachingEnd = isEmpty || (chatData && chatData[chatData.length - 1]?.length < 20) || false;
     const [chat, onChangeChat, setChat] = useInput('');
     const scrollbarRef = useRef(null);
+    const [dragOver, setDragOver] = useState(false);
 
     const [socket] = useSocket(workspace);
 
@@ -88,6 +89,33 @@ const DirectMessage = () => {
         }
     }, [socket, onMessage])
 
+    const onDrop = useCallback((e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        if (e.dataTransfer.items) {
+            for (let i = 0; i < e.dataTransfer.items.length; i++) {
+                if (e.dataTransfer.items[i].kind === 'file') {
+                    let file = e.dataTransfer.items[i].getAsFile();
+                    formData.append('image', file);
+                }
+            }
+        } else {
+            for (let i = 0; i < e.dataTransfer.files.length; i++) {
+                formData.append('image', e.dataTransfer.files[i]);
+            }
+        }
+        axios.post(`/api/workspaces/${workspace}/dms/${id}/images`, formData).then(() => {
+            setDragOver(false);
+            revalidate();
+        });
+    }, [revalidate, workspace, id]);
+
+    const onDragOver = useCallback((e) => {
+        e.preventDefault();
+        setDragOver(true);
+    }, []);
+
     if (!userData || !myData) {
         return null;
     }
@@ -95,7 +123,7 @@ const DirectMessage = () => {
     const chatSections = makeSection(chatData ? chatData.flat()?.reverse() : []);
 
     return (
-        <Container>
+        <Container onDrop={onDrop} onDragOver={onDragOver}>
             <Header>
                 <img src={gravatar.url(userData.email, {s: "24px", d: 'retro'})} alt={userData.nickname}/>
                 <span>{userData.nickname}</span>

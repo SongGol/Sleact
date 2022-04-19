@@ -5,13 +5,17 @@ import regexifyString from 'regexify-string';
 import dayjs from 'dayjs';
 import { Link, useParams } from 'react-router-dom';
 
+const BACK_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:3095' : 'https://sleact.nodebird.com';
 const Chat = ({ data }) => {
     const user = 'Sender' in data ? data.Sender : data.User;
     const { workspace } = useParams();
 
     console.log(`in chat ${data}`)
 
-    const result = useMemo(() => regexifyString({
+    const result = useMemo(() => 
+        data.content.startsWith('uploads\\') ? 
+        (<img src={`${BACK_URL}/${data.content}`} style={{maxHeight: 200}}/>) :
+        (regexifyString({
         input: data.content,
         pattern: /@\[(.+?)]\((\d+?)\)|\n/g,
         decorator(match, index) {
@@ -25,7 +29,7 @@ const Chat = ({ data }) => {
             }
             return <br key={index} />
         }
-    }), [data.content]);
+    }), [data.content]));
 
     return (
         <ChatWrapper>
